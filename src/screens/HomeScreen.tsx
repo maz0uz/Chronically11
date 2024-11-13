@@ -3,17 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const HomeScreen = () => {
   const [selectedTab, setSelectedTab] = useState<'My News' | 'Trending'>('Trending');  // State to track selected tab
-  const [tabWidths, setTabWidths] = useState<{ 'My News': number; 'Trending': number }>({ 'My News': 0, 'Trending': 0 }); // Track the widths of the tabs
 
   // Function to switch between tabs
   const handleTabPress = (tab: 'My News' | 'Trending') => {
     setSelectedTab(tab);
-  };
-
-  // Function to update tab width
-  const handleTabLayout = (event: any, tab: 'My News' | 'Trending') => {
-    const { width } = event.nativeEvent.layout;
-    setTabWidths((prev) => ({ ...prev, [tab]: width }));
   };
 
   return (
@@ -23,7 +16,6 @@ const HomeScreen = () => {
         <Text
           style={[styles.tabText, selectedTab === 'My News' && styles.selectedTab]}
           onPress={() => handleTabPress('My News')}
-          onLayout={(event) => handleTabLayout(event, 'My News')}
         >
           My News
         </Text>
@@ -32,7 +24,6 @@ const HomeScreen = () => {
         <Text
           style={[styles.tabText, selectedTab === 'Trending' && styles.selectedTab]}
           onPress={() => handleTabPress('Trending')}
-          onLayout={(event) => handleTabLayout(event, 'Trending')}
         >
           Trending
         </Text>
@@ -43,10 +34,9 @@ const HomeScreen = () => {
         <View
           style={[
             styles.underline,
-            {
-              width: tabWidths[selectedTab], // Set the line's width based on selected tab
-              marginLeft: selectedTab === 'Trending' ? tabWidths['My News'] : 0, // Offset based on the selected tab
-            },
+            selectedTab === 'My News'
+              ? styles.underlineMyNews
+              : styles.underlineTrending,
           ]}
         />
       </View>
@@ -70,13 +60,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF7DD',
     paddingTop: 5,
   },
   tabContainer: {
     flexDirection: 'row',
-    marginTop: 20,
-    marginBottom: 3,  // Reduced margin to bring the line closer to the tabs
+    marginTop: 10,
+    marginBottom: 0,  // Reduced margin to bring the line closer to the tabs
   },
   tabText: {
     fontSize: 18,
@@ -89,16 +79,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   underlineContainer: {
-    flexDirection: 'row',  // Make sure underline aligns with the tabs
     width: '100%', // Full width of the container
     height: 2, // Height of the underline
     marginTop: 0,  // No margin above the underline
-    justifyContent: 'flex-start', // Align underline based on selected tab
+    position: 'relative',  // Ensure underline is positioned relative to the container
   },
   underline: {
     height: 2,
     backgroundColor: '#000000', // Color for the underline
-    marginTop: 0, // Make sure it's directly below the tabs
+    position: 'absolute', // Position absolutely within the container
+    bottom: 0,  // Align it at the bottom of the container
+  },
+  underlineMyNews: {
+    width: 110, // Set fixed width for the "My News" tab underline
+    left: 95, // Set position of underline under "My News"
+  },
+  underlineTrending: {
+    width: 110, // Set fixed width for the "Trending" tab underline
+    left: 210, // Set position of underline under "Trending" (adjust based on tab position)
   },
   screen: {
     flex: 1,

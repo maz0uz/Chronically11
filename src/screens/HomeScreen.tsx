@@ -3,11 +3,20 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const HomeScreen = () => {
   const [selectedTab, setSelectedTab] = useState<'My News' | 'Trending'>('Trending');  // State to track selected tab
-
+  const [data,setdata] = useState([]);
   // Function to switch between tabs
   const handleTabPress = (tab: 'My News' | 'Trending') => {
     setSelectedTab(tab);
   };
+  useEffect(() => {
+          fetch('http://192.168.1.10:5000/data')  // Replace with your backend's actual URL
+              .then((response) => response.json())
+              .then((data) => {
+                  console.log('Results:', data[0]);
+                  setdata(data[0]);
+              })
+              .catch((error) => console.error('Error fetching data:', error));
+      }, []);
 
   return (
     <View style={styles.container}>
@@ -44,7 +53,6 @@ const HomeScreen = () => {
       {/* Conditionally render the content for the selected tab */}
       {selectedTab === 'Trending' ? (
         <View style={styles.screen}>
-          <Text>Trending Content</Text>
         </View>
       ) : (
         <View style={styles.screen}>

@@ -50,7 +50,7 @@ const HomeScreen = () => {
         />
       </View>
 
-      {/* Conditionally render the content for the selected tab */}
+      {/* Conditionally renders the content for the selected tab */}
       {selectedTab === 'Trending' ? (
         <View style={styles.screen}>
         </View>

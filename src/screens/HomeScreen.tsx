@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const HomeScreen = () => {
   const [selectedTab, setSelectedTab] = useState<'My News' | 'Trending'>('Trending');  // State to track selected tab
-  const [data,setdata] = useState([]);
+  const [data, setData] = useState([]);  // State to store fetched tweet data
+  const [firstTweet, setFirstTweet] = useState(null); // State to store the first tweet
+
   // Function to switch between tabs
   const handleTabPress = (tab: 'My News' | 'Trending') => {
     setSelectedTab(tab);
   };
+
   useEffect(() => {
-          fetch('http://192.168.1.10:5000/data')  // Replace with your backend's actual URL
-              .then((response) => response.json())
-              .then((data) => {
-                  console.log('Results:', data[0]);
-                  setdata(data[0]);
-              })
-              .catch((error) => console.error('Error fetching data:', error));
-      }, []);
+    fetch('/tweets/Formula1')  // Replace with your backend's actual URL
+      .then((response) => response.json())
+      .then((data) => {
+        const firstTweet = data[0]; // Get the first tweet from the fetched data
+        setFirstTweet(firstTweet); // Store the first tweet in state
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }, []);  // Empty dependency array ensures this effect runs once on mount
 
   return (
     <View style={styles.container}>
@@ -53,6 +56,11 @@ const HomeScreen = () => {
       {/* Conditionally renders the content for the selected tab */}
       {selectedTab === 'Trending' ? (
         <View style={styles.screen}>
+          {firstTweet ? (
+            <Text>{firstTweet.Tweet}</Text>
+          ) : (
+            <Text>Loading...</Text>
+          )}
         </View>
       ) : (
         <View style={styles.screen}>

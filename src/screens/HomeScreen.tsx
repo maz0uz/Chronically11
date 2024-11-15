@@ -12,7 +12,7 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    fetch('/tweets/Formula1')  // Replace with your backend's actual URL
+    fetch('http://localhost:5000/tweets')  // Replace with your backend's actual URL
       .then((response) => response.json())
       .then((data) => {
         const firstTweet = data[0]; // Get the first tweet from the fetched data
